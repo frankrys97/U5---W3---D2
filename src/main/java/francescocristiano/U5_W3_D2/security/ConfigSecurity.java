@@ -2,6 +2,7 @@ package francescocristiano.U5_W3_D2.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,6 +25,7 @@ public class ConfigSecurity {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.formLogin(http -> http.disable());
         httpSecurity.csrf(http -> http.disable());
+        httpSecurity.cors(Customizer.withDefaults());
         httpSecurity.sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/**").permitAll());
         return httpSecurity.build();
@@ -37,7 +39,7 @@ public class ConfigSecurity {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
 
