@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,9 @@ public class EmployeeService {
     @Autowired
     private MailgunSender mailgunSender;
 
+    @Autowired
+    private PasswordEncoder bCryptPasswordEncoder;
+
     public Employee saveEmployee(NewEmployeeDTO employeePayload) {
         employeeRepository.findByUsername(employeePayload.username()).ifPresent(employee -> {
             throw new BadRequestException("Username already exists");
@@ -40,7 +44,7 @@ public class EmployeeService {
         employeeRepository.findByEmail(employeePayload.email()).ifPresent(employee -> {
             throw new BadRequestException("Email already exists");
         });
-        Employee newEmployee = new Employee(employeePayload.username(), employeePayload.name(), employeePayload.surname(), employeePayload.email(), employeePayload.password());
+        Employee newEmployee = new Employee(employeePayload.username(), employeePayload.name(), employeePayload.surname(), employeePayload.email(), bCryptPasswordEncoder.encode(employeePayload.password()));
         mailgunSender.sendRegistrationEmail(newEmployee);
         return employeeRepository.save(newEmployee);
     }
@@ -57,7 +61,7 @@ public class EmployeeService {
     }
 
     public Employee findEmployeeByIdAndUpdate(UUID id, NewEmployeeDTO updatedEmployeePayload) {
-        Employee updatedEmployee = new Employee(updatedEmployeePayload.username(), updatedEmployeePayload.name(), updatedEmployeePayload.surname(), updatedEmployeePayload.email(), updatedEmployeePayload.password());
+        Employee updatedEmployee = new Employee(updatedEmployeePayload.username(), updatedEmployeePayload.name(), updatedEmployeePayload.surname(), updatedEmployeePayload.email(), bCryptPasswordEncoder.encode(updatedEmployeePayload.password()));
         Employee foundEmployee = findEmployeeById(id);
         foundEmployee.setUsername(updatedEmployee.getUsername());
         foundEmployee.setName(updatedEmployee.getName());
@@ -94,5 +98,5 @@ public class EmployeeService {
         foundEmployee.setRole(Role.valueOf(role.role().toUpperCase()));
         return employeeRepository.save(foundEmployee);
     }
-    
+
 }
