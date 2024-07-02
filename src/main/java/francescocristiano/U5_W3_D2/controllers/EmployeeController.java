@@ -1,5 +1,6 @@
 package francescocristiano.U5_W3_D2.controllers;
 
+import francescocristiano.U5_W3_D2.entities.Device;
 import francescocristiano.U5_W3_D2.entities.Employee;
 import francescocristiano.U5_W3_D2.exceptions.BadRequestException;
 import francescocristiano.U5_W3_D2.payloads.NewEmployeeDTO;
@@ -32,6 +33,11 @@ public class EmployeeController {
     // potrebbe vedere tutte le informazioni di tutti i dipendenti
     public Page<Employee> getEmployees(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy) {
         return employeeService.findAllEmployees(page, size, sortBy);
+    }
+
+    @GetMapping("/me/devices")
+    public Page<Device> getDevices(@AuthenticationPrincipal Employee currentAuthenticatedEmployee) {
+        return (Page<Device>) currentAuthenticatedEmployee.getDevices(); // Da rivedere il cast
     }
 
     @GetMapping("/me")
@@ -90,6 +96,11 @@ public class EmployeeController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public Employee uploadAvatar(@PathVariable UUID id, @RequestParam("avatar") MultipartFile file) throws IOException {
         return employeeService.uploadAvatar(id, file);
+    }
+
+    @PostMapping("/me/avatar")
+    public Employee uploadAvatar(@AuthenticationPrincipal Employee currentAuthenticatedEmployee, @RequestParam("avatar") MultipartFile file) throws IOException {
+        return employeeService.uploadAvatar(currentAuthenticatedEmployee.getId(), file);
     }
 
 }
