@@ -33,6 +33,6 @@ public class JWTTools {
     }
 
     public String extractIdFrom(String token) {
-        return Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parseSignedClaims(token).getPayload().getId();
+        return Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parseSignedClaims(token).getPayload().getSubject();
     }
 }

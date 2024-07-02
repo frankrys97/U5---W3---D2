@@ -1,11 +1,9 @@
 package francescocristiano.U5_W3_D2.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import francescocristiano.U5_W3_D2.enums.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +18,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
+@JsonIgnoreProperties({"password", "role", "authorities", "enabled", "accountNonExpired", "credentialsNonExpired", "accountNonLocked"})
 public class Employee implements UserDetails {
     @Id
     @GeneratedValue
@@ -37,6 +36,7 @@ public class Employee implements UserDetails {
     @Setter
     private String password;
     @Setter
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "employee")
