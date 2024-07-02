@@ -68,6 +68,7 @@ public class EmployeeService {
         foundEmployee.setSurname(updatedEmployee.getSurname());
         foundEmployee.setEmail(updatedEmployee.getEmail());
         foundEmployee.setAvatarUrl(updatedEmployee.getAvatarUrl());
+        foundEmployee.setPassword(updatedEmployee.getPassword());
         return employeeRepository.save(foundEmployee);
     }
 
