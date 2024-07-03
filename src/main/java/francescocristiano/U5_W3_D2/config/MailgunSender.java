@@ -30,5 +30,7 @@ public class MailgunSender {
                 .queryString("subject", "Registration Confirmation")
                 .queryString("text", "Congratulations " + recipient.getName() + " " + recipient.getSurname() + "! You have been hired and will shortly receive information regarding the devices assigned to you.")
                 .asJson();
+
+        System.out.println(response.getBody());
     }
 }
