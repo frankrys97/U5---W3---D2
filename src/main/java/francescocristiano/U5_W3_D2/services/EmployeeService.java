@@ -45,8 +45,11 @@ public class EmployeeService {
             throw new BadRequestException("Email already exists");
         });
         Employee newEmployee = new Employee(employeePayload.username(), employeePayload.name(), employeePayload.surname(), employeePayload.email(), bCryptPasswordEncoder.encode(employeePayload.password()));
+
+        employeeRepository.save(newEmployee);
+
         mailgunSender.sendRegistrationEmail(newEmployee);
-        return employeeRepository.save(newEmployee);
+        return newEmployee;
     }
 
     public Employee findEmployeeById(UUID id) {
